@@ -55,6 +55,10 @@ function loadData() {
         'format': "json"
     });
 
+    var wikiTimeoutRequest = setTimeout(function(){
+        $wikiElem.text("Failed to get wikipedia resources");    
+    }, 8000);
+
     $.ajax( {
         url: wikipediaURL,
         dataType: 'jsonp',
@@ -75,6 +79,8 @@ function loadData() {
             });
 
             $wikiElem.append(items.join(""));
+
+            clearTimeout(wikiTimeoutRequest);
         }
     });
 
