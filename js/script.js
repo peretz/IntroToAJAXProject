@@ -19,14 +19,14 @@ function loadData() {
     $body.append('<img class="bgimg" src="' + urlSource + '">');
 
     // load New York Times articles.
-    var url = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
-    url += '?' + $.param({
+    var nytURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
+    nytURL += '?' + $.param({
         'api-key': "",
         'q': city,
         'sort': "newest"
     });
 
-    $.getJSON( url, function( data ) {
+    $.getJSON( nytURL, function( data ) {
         $nytHeaderElem.text("New York Times articles about " + city);
 
         var articles = data.response.docs;
@@ -47,7 +47,36 @@ function loadData() {
         $nytHeaderElem.text("New York Times articles could not be loaded.");
     });
 
-    // YOUR CODE GOES HERE!
+    // Load wikipedia articles using JSONP
+    var wikipediaURL = "https://en.wikipedia.org/w/api.php";
+    wikipediaURL += '?' + $.param({
+        'action': "opensearch",
+        'search': city,
+        'format': "json"
+    });
+
+    $.ajax( {
+        url: wikipediaURL,
+        dataType: 'jsonp',
+        success: function(data) {
+            console.log(data);
+            var linksToArticles = data[1];
+            console.log(linksToArticles);
+            var items = [];
+            $.each( linksToArticles, function(key, link) {
+                console.log(link);
+                var articleAsHTML = "<li>";
+                articleAsHTML += "<a href='http://en.wikipedia.org/wiki/" + link + "'>";
+                articleAsHTML += link;
+                articleAsHTML += "</a>";
+                articleAsHTML += "</li>";
+
+                items.push( articleAsHTML );
+            });
+
+            $wikiElem.append(items.join(""));
+        }
+    });
 
     return false;
 };
