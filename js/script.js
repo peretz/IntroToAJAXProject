@@ -21,7 +21,7 @@ function loadData() {
     // load New York Times articles.
     var nytURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
     nytURL += '?' + $.param({
-        'api-key': "",
+        'api-key': "", // Add your own New York Times API KEY.
         'q': city,
         'sort': "newest"
     });
